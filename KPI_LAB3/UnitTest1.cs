@@ -64,9 +64,9 @@ namespace KPI_LAB3
         public static IEnumerable<object[]> GetDataInit()
         {
             yield return new object[] { "null 'salt', 0 'adlerMod32'", "password", null, 0 };
-            yield return new object[] { "", "", "password", (uint)10 };
-            yield return new object[] { "", "soul", "password", null };
-            yield return new object[] { "", "soul", "password", (uint)10 };
+            yield return new object[] { "null 'salt', 10 'adlerMod32'", "", "password", (uint)10 };
+            yield return new object[] { "soul 'salt', 0 'adlerMod32'", "soul", "password", 0 };
+            yield return new object[] { "soul 'salt', 10 'adlerMod32'", "soul", "password", (uint)10 };
 
         }
 
