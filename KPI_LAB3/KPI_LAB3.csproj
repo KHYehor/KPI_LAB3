@@ -17,8 +17,5 @@
     <Reference Include="IIG.PasswordHashingUtils">
       <HintPath>..\..\..\..\Users\egorhilchenko\Desktop\IIG.PasswordHashingUtils\IIG.PasswordHashingUtils.dll</HintPath>
     </Reference>
-    <Reference Include="IIG.PasswordHashingUtils">
-      <HintPath>..\IIG.PasswordHashingUtils.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
