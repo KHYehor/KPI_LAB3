@@ -15,16 +15,23 @@ namespace KPI_LAB3
             this.output = output;
         }
 
-        private static string GenerateReallyLongString()
+        private static string GenerateLongString()
         {
             string returnstring = "";
             for (uint i = 0; i < 100000; i++) returnstring += "a";
             return returnstring;
         }
 
+        private static string GenerateReallyLongString()
+        {
+            string returnstring = "";
+            for (uint i = 0; i < uint.MaxValue; i++) returnstring += "a";
+            return returnstring;
+        }
+
         public static IEnumerable<object[]> GetDataHash()
         {
-            string longstring = GenerateReallyLongString();
+            string longstring = GenerateLongString();
             yield return new object[] { "'' 'password' + '' 'salt' + null 'adlerMod32'", "", "", null };
             yield return new object[] { "'' 'password' + '' 'salt' + 10 'adlerMod32'", "", "", (uint)10 };
             yield return new object[] { "'' 'password' + 'soul' 'salt' + null 'adlerMod32'", "", "soul", null };
@@ -40,6 +47,9 @@ namespace KPI_LAB3
             yield return new object[] { "longpassword 'password' + '' 'salt' + 10 'adlerMod32'", longstring, "", (uint)10 };
             yield return new object[] { "longpassword 'password' + 'soul' 'salt' + null 'adlerMod32'", longstring, "soul", null };
             yield return new object[] { "longpassword 'password' + 'soul' 'salt' + 10 'adlerMod32'", longstring, "soul", (uint)10 };
+
+            string veryLongstring = GenerateLongString();
+            yield return new object[] { "overflow longpassword 'password' + 'soul' 'salt' + 10 'adlerMod32'", veryLongstring, "soul", (uint)10 };
         }
 
         [Theory]
@@ -50,14 +60,21 @@ namespace KPI_LAB3
             output.WriteLine(description);
             output.WriteLine("+=======================+");
 
-            Assert.Equal(
-                PasswordHasher.GetHash(password, salt, adlerMod32),
-                PasswordHasher.GetHash(password, salt, adlerMod32)
-            );
-            Assert.NotEqual(
-                PasswordHasher.GetHash(password, salt, adlerMod32),
-                PasswordHasher.GetHash(password+"1", salt, adlerMod32)
-            );
+            try
+            {
+                Assert.Equal(
+                    PasswordHasher.GetHash(password, salt, adlerMod32),
+                    PasswordHasher.GetHash(password, salt, adlerMod32)
+                );
+                Assert.NotEqual(
+                    PasswordHasher.GetHash(password, salt, adlerMod32),
+                    PasswordHasher.GetHash(password + "1", salt, adlerMod32)
+                );
+            } catch (Exception e)
+            {
+                Assert.IsType<OverflowException>(e);
+            }
+
         }
 
 
